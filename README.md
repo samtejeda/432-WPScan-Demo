@@ -3,14 +3,6 @@
 
 ---
 
-## Target Site
-
-```
-https://mute-bargraph-undated.ngrok-free.dev
-```
-
----
-
 ## What is WPScan?
 
 WPScan is a black-box WordPress security scanner used by penetration testers and site owners to find vulnerabilities in WordPress installations. It comes pre-installed on Kali Linux and can discover:
@@ -43,10 +35,22 @@ abc123
 welcome
 WORDLIST
 ```
-
+Or alternatively you can use the built-in Kali VM wordlist, use this command to use unzip it:
+```bash
+sudo gzip -d /usr/share/wordlists/rockyou.txt.gz
+```
+And replace
+``` bash
+~/demo-passwords.txt
+```
+With
+``` bash
+/usr/share/wordlists/rockyou.txt
+```
 ---
 
 ## Demo Commands
+⚠️ Make sure to replace 'https://target-wp-site.com' with the actual target WordPress site URL.
 
 ### 1. Update WPScan Database
 
@@ -65,7 +69,7 @@ wpscan --update
 A general scan that fingerprints the WordPress installation — version, server software, interesting files.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev
+wpscan --url https://target-wp-site.com
 ```
 
 **What to look for:** WordPress version, readme.html, XML-RPC status, robots.txt entries.
@@ -77,7 +81,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev
 Discovers valid WordPress usernames using multiple techniques — author archives, REST API, RSS feed, and ID brute forcing.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev -e u
+wpscan --url https://target-wp-site.com -e u
 ```
 
 **What to look for:** All 4 usernames discovered. Note how WPScan shows which technique found each one.
@@ -89,7 +93,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev -e u
 Checks for exposed configuration backups and database exports that should never be publicly accessible.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev -e cb,dbe
+wpscan --url https://target-wp-site.com -e cb,dbe
 ```
 
 **What to look for:** `wp-config.txt` flagged as a critical finding — this file contains database credentials.
@@ -101,7 +105,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev -e cb,dbe
 Runs everything at once — plugins, themes, users, and sensitive files in a single scan.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
+wpscan --url https://target-wp-site.com \
   -e ap,at,u,cb,dbe \
   --plugins-detection mixed
 ```
@@ -115,7 +119,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
 Uses the wordlist you created to try cracking admin_user's password. WPScan tries each password against the WordPress login page.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
+wpscan --url https://target-wp-site.com \
   -U admin_user \
   -P ~/demo-passwords.txt \
   --password-attack wp-login
@@ -130,7 +134,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
 An alternative brute force method using the XML-RPC API. It can send multiple password guesses per request, making it faster than the login method.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
+wpscan --url https://target-wp-site.com \
   -U admin_user \
   -P ~/demo-passwords.txt \
   --password-attack xmlrpc
@@ -145,7 +149,7 @@ wpscan --url https://mute-bargraph-undated.ngrok-free.dev \
 Exports scan results to a text file — essential for real penetration testing reports.
 
 ```bash
-wpscan --url https://mute-bargraph-undated.ngrok-free.dev -e u \
+wpscan --url https://target-wp-site.com -e u \
   --output ~/wpscan-report.txt \
   --format cli-no-colour
 ```
@@ -158,7 +162,7 @@ cat ~/wpscan-report.txt
 
 ---
 
-## What You Should Find
+## Example of possible findings (may vary depending on the target site)
 
 | Finding | Type | Details |
 |---|---|---|
@@ -181,4 +185,4 @@ cat ~/wpscan-report.txt
 
 ## Legal & Ethical Reminder
 
-All scanning in this demo is performed on a site created specifically for this exercise. Never run WPScan or any security tool against a website without explicit written permission from the owner. Unauthorized scanning may be illegal under the Computer Fraud and Abuse Act (CFAA) and equivalent laws.
+All scanning in this demo should be performed on a site that you own or have permission to scan. Never run WPScan or any security tool against a website without explicit written permission from the owner. Unauthorized scanning may be illegal under the Computer Fraud and Abuse Act (CFAA) and equivalent laws.
