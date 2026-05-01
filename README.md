@@ -1,5 +1,4 @@
 # WPScan — Hands-On Demo
-### Student Handout
 
 ---
 
@@ -47,6 +46,8 @@ With
 ``` bash
 /usr/share/wordlists/rockyou.txt
 ```
+In the commands that use the worlist (6 and 7 in this demo).
+
 ---
 
 ## Demo Commands
